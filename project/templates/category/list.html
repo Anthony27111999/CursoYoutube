@@ -1,0 +1,36 @@
+{% extends 'generic/list.html' %}
+{% block column %}
+    <tr>
+        <th scope="col">Nro.</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block row %}
+    {% for cat in object_list %}
+        <tr>
+            <td>{{ cat.id }}</td>
+            <td>{{ cat.name }}</td>
+            <td>
+                <button type="button" class="btn btn-warning">
+                    <i class="fa-solid fa-file"></i>
+                    Update
+                </button>
+                <button type="button" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                    Delete
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block button_create %}
+    <a href="{% url 'category:category_create' %}">
+        <button class="btn btn-primary " id="btnTest">
+            <i class="fa-solid fa-plus"></i>
+            Create category
+        </button>
+    </a>
+{% endblock %}

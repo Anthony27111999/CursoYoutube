@@ -1,0 +1,83 @@
+{% extends 'body.html' %}
+
+{% block content %}
+    <form method="post" action=".">
+
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    {{ title }}
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="{{ action }}">
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                    {% endif %}
+
+
+                    {% for visible_field in form.visible_fields %}
+
+                        <label for="{{ visible_field.label }}" class="form-label">{{ visible_field.label }}</label>
+                        {{ visible_field }}
+                    {% endfor %}
+
+                </div>
+            </div>
+            {% block list %}
+
+            {% endblock %}
+        </div>
+    </form>
+    <script>
+        {% if form.errors %}
+            let error = '';
+            {% for field in form %}
+                {% for error in field.errors %}
+                    error += '{{ error }}\n'
+                {% endfor %}
+            {% endfor %}
+            Swal.fire({
+                title: 'Error!',
+                text: error,
+                icon: 'error',
+                confirmButtonText: 'Cool'
+            })
+        {%  endif %}
+
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            let parameters = $(this).serializeArray();
+            $.ajax({
+                url: '{% url 'category:category_create' %}',
+                type: 'POST',
+                data: parameters,
+                dataType: 'json'
+            }).done(function(data) {
+                if (!data.hasOwnProperty('error')) {
+                    location.href =('{{ list_url }}');
+                    return false;
+                }
+                message_error(data)
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert('Error - ' + textStatus + ' - ' + errorThrown)
+            }).always(function (data) {
+            })
+        });
+    </script>
+{% endblock %}
