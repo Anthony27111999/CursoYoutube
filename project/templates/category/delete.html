@@ -1,0 +1,18 @@
+{% extends 'generic/delete.html' %}
+{% block blockNavegator %}
+    <div class="card-footer">
+        <a href="{{ list_url }}" class="btn btn-primary " id="btnTest">
+            <i class="fa-solid fa-backward"></i>
+            Atras
+        </a>
+    </div>
+
+{% endblock %}
+{% block list %}
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary " id="btnTest">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Aceptar
+        </button>
+    </div>
+{% endblock %}

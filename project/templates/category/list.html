@@ -13,14 +13,14 @@
             <td>{{ cat.id }}</td>
             <td>{{ cat.name }}</td>
             <td>
-                <button type="button" class="btn btn-warning">
+                <a href="{%  url 'category:category_update' cat.id %}" class="btn btn-warning">
                     <i class="fa-solid fa-file"></i>
                     Update
-                </button>
-                <button type="button" class="btn btn-danger">
+                </a>
+                 <a href="{%  url 'category:category_delete' cat.id %}" class="btn btn-danger">
                     <i class="fa-solid fa-trash"></i>
                     Delete
-                </button>
+                </a>
             </td>
         </tr>
     {% endfor %}
