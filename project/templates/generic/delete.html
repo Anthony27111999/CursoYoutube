@@ -2,12 +2,16 @@
 
 {% block content %}
     <form method="post" action=".">
-        {% block blockNavegator %}
-        {% endblock %}
+        <div class="card-footer">
+            <a href="{{ list_url }}" class="btn btn-primary " id="btnTest">
+                <i class="fa-solid fa-backward"></i>
+                Atras
+            </a>
+        </div>
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fa-solid fa-plus-circle"></i>
+                    <i class="fa-solid fa-trash"></i>
                     {{ title }}
                 </h3>
             </div>
@@ -30,7 +34,7 @@
                     {% endif %}
                     <div class="alert alert-danger alert-dismissible">
                         <h5><i class="icon fas fa-ban"></i> Notificacion!</h5>
-                        ¿Quieres eliminar el registro {{ object.id }}?
+                        ¿Quieres eliminar el registro "{{ object.name }}"?
                     </div>
                 </div>
             </div>
@@ -39,4 +43,41 @@
             {% endblock %}
         </div>
     </form>
+        <script>
+        {% if form.errors %}
+            let error = '';
+            {% for field in form %}
+                {% for error in field.errors %}
+                    error += '{{ error }}\n'
+                {% endfor %}
+            {% endfor %}
+            Swal.fire({
+                title: 'Error!',
+                text: error,
+                icon: 'error',
+                confirmButtonText: 'Cool'
+            })
+        {%  endif %}
+
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            let parameters = $(this).serializeArray();
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: parameters,
+                dataType: 'json'
+            }).done(function(data) {
+                if (!data.hasOwnProperty('error')) {
+                    location.href =('{{ list_url }}');
+                    return false;
+                }
+                message_error(data)
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert('Error - ' + textStatus + ' - ' + errorThrown)
+            }).always(function (data) {
+            })
+        })
+        ;
+    </script>
 {% endblock %}

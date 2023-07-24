@@ -39,3 +39,8 @@ class CategoryCreateForm(ModelForm):
     #     except Exception as ex:
     #         data['error'] = str(ex)
     #     return data
+    def clean(self):
+        clearned = super().clean()
+        if len(clearned['name']) < 50:
+            self.add_error('name', 'Faltan caracteres')
+        return clearned

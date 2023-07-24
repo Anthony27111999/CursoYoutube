@@ -1,20 +1,15 @@
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 
 from .forms import CategoryCreateForm
 from .models import Category
-from django.utils.decorators import method_decorator
 
 
 class CategoryListView(ListView):
     model = Category
     template_name = 'category/list.html'
 
-    @method_decorator(csrf_exempt)
     # Este decorator no deja acceder a la persona que no este logueada
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -22,24 +17,22 @@ class CategoryListView(ListView):
     def post(self, request, *args, **kwargs):
         data = {}
         try:
-            data = Category.objects.get(pk=request.POST['id']).toJSON()
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Category.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'A ocurrido un error'
         except Exception as ex:
             data['error'] = str(ex)
 
-        return JsonResponse(data)
+        return JsonResponse(data, safe=False)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'List of category'
         return context
-
-
-def category_list(request):
-    data = {
-        'title': 'List of category',
-        'categoria': Category.objects.all()
-    }
-    return render(request, 'category/list.html', data)
 
 
 class CategoryCreateView(CreateView):
@@ -85,7 +78,7 @@ class CategoryCreateView(CreateView):
 class CategoryUpdateView(UpdateView):
     model = Category
     form_class = CategoryCreateForm
-    template_name = 'category/create.html'
+    template_name = 'category/update.html'
     success_url = reverse_lazy('category:category_list')
 
     def get_context_data(self, **kwargs):
@@ -102,9 +95,42 @@ class CategoryDeleteView(DeleteView):
     template_name = 'category/delete.html'
     success_url = reverse_lazy('category:category_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as ex:
+            data['error'] = str(ex)
+        return JsonResponse(data)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Delete category'
         context['entity'] = 'Category'
         context['list_url'] = reverse_lazy('category:category_list')
+        return context
+
+
+class CategoryFormView(FormView):
+    form_class = CategoryCreateForm
+    template_name = 'category/create.html'
+    success_url = reverse_lazy('category:category_list')
+
+    def form_valid(self, form):
+        print(form.errors)
+        return  super().form_valid(form)
+    def form_invalid(self, form):
+        print(f'Error => {form.errors}')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Form category'
+        context['entity'] = 'Category'
+        context['list_url'] = reverse_lazy('category:category_list')
+        context['action'] = 'add'
         return context

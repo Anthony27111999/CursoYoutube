@@ -2,14 +2,25 @@
 
 {% block content %}
     <form method="post" action=".">
-
+        <div class="card-footer">
+            <a href="{{ list_url }}" class="btn btn-primary " id="btnTest">
+                <i class="fa-solid fa-backward"></i>
+                Atras
+            </a>
+        </div>
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fa-solid fa-plus-circle"></i>
+                    {% if action == 'add' %}
+                        <i class="fa-solid fa-plus-circle"></i>
+                    {% else %}
+
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    {% endif %}
                     {{ title }}
                 </h3>
             </div>
+
 
             <div class="card-body">
                 <div class="form-group">
@@ -39,9 +50,19 @@
 
                 </div>
             </div>
-            {% block list %}
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary " id="btnTest">
+                    {% if action == 'add' %}
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Create category
+                    {% else %}
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Edit category
+                    {% endif %}
 
-            {% endblock %}
+                </button>
+            </div>
+
         </div>
     </form>
     <script>
@@ -78,6 +99,7 @@
         {#        alert('Error - ' + textStatus + ' - ' + errorThrown)#}
         {#    }).always(function (data) {#}
         {#    })#}
-        });
+        })
+        ;
     </script>
 {% endblock %}
