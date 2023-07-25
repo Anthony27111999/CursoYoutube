@@ -27,20 +27,8 @@ class CategoryCreateForm(ModelForm):
             fields.field.widget.attrs['autocomplete'] = 'off'
             fields.field.widget.attrs['autofocus'] = True
 
-    # def save(self, commit=True):
-    #     data = {}
-    #     form = super()
-    #     try:
-    #         if form.is_valid():
-    #             form.save()
-    #         else:
-    #             data['error'] = form.errors
-    #
-    #     except Exception as ex:
-    #         data['error'] = str(ex)
-    #     return data
     def clean(self):
         clearned = super().clean()
-        if len(clearned['name']) < 50:
+        if len(clearned['name']) > 50:
             self.add_error('name', 'Faltan caracteres')
         return clearned

@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -61,18 +63,8 @@ class CategoryCreateView(CreateView):
         except Exception as ex:
             data['error'] = str(ex)
 
+        # Convertir el diccionario a formato JSON y enviarlo como respuesta JSON
         return JsonResponse(data)
-
-        # print(request.POST)
-        # form = CategoryCreateForm(request.POST)
-        # if form.is_valid():
-        #     form.save()
-        #     return HttpResponseRedirect(self.success_url)
-        # self.object = None
-        # context = self.get_context_data(**kwargs)
-        # context['form'] = form
-        # context['create_url'] = reverse_lazy('category:category_list')
-        # return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
