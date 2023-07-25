@@ -6,8 +6,10 @@ from core.login.views import LoginFormView
 
 
 urlpatterns = [
+    path('', IndexView.as_view(), name='index'),
     path('admin/', admin.site.urls),
-    path('login/', LoginFormView.as_view()),
+    path('login/', include('core.login.urls')),
     path('erp/', include('core.erp.urls')),
-    path('', IndexView.as_view()),
+    path('dashboard/', include('core.dashboard.urls')),
+
 ]
