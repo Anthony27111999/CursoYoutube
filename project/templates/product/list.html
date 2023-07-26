@@ -1,0 +1,38 @@
+{% extends 'generic/list.html' %}
+{% block column %}
+    <tr>
+        <th scope="col">Nro.</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Imagenes</th>
+        <th scope="col">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block row %}
+    {% for prod in object_list %}
+        <tr>
+            <td>{{ prod.id }}</td>
+            <td>{{ prod.name }}</td>
+            <td><img src="{{ prod.get_imagen}}" class="img-fluid d-block mx-auto" style="width: 50px; height: 50px;"></img></td>
+            <td>
+                <a href="{%  url 'product:product_update' prod.id %}" class="btn btn-warning">
+                    <i class="fa-solid fa-file"></i>
+                    Update
+                </a>
+                 <a href="{%  url 'product:product_delete' prod.id %}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                    Delete
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block button_create %}
+    <a href="{% url 'product:product_create' %}">
+        <button class="btn btn-primary " id="btnTest">
+            <i class="fa-solid fa-plus"></i>
+            Create product
+        </button>
+    </a>
+{% endblock %}
