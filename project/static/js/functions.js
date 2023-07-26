@@ -7,11 +7,10 @@ function message_error(obj) {
         });
 
         html += '</ul>';
+    } else {
+        html = '<p>' + obj + '</p>';
     }
-    else{
-            html = '<p>'+ obj +'</p>';
-        } 
-    
+
 
     Swal.fire({
         title: 'Error!',
@@ -22,12 +21,12 @@ function message_error(obj) {
 
 }
 
-function  alert_jqueryConfirm(){
+function alert_jqueryConfirm(url, parameters, callback) {
     $.confirm({
         theme: 'material',
         title: 'Confirmación',
         icon: 'fa fa-info',
-        content: '',
+        content: '¿Estas seguro de realizar la siguiente accion?',
         columnClass: 'medium',
         typeAnimated: true,
         cancelButtonClass: 'btn-primary',
@@ -38,16 +37,31 @@ function  alert_jqueryConfirm(){
                 text: "Si",
                 btnClass: 'btn-primary',
                 action: function () {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: parameters,
+                        dataType: 'json'
+                    }).done(function (data) {
+                        if (!data.hasOwnProperty('error')) {
+                            callback();
+                            return false;
+                        }
+                        message_error(data)
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert('Error - ' + textStatus + ' - ' + errorThrown)
+                    }).always(function (data) {
+                        console.log('paso')
+                    })
+                },
+                danger: {
+                    text: "No",
+                    btnClass: 'btn-red',
+                    action: function () {
 
-                }
-            },
-            danger: {
-                text: "No",
-                btnClass: 'btn-red',
-                action: function () {
-
-                }
-            },
+                    }
+                },
+            }
         }
     })
 }
