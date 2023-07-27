@@ -19,6 +19,7 @@ class CategoryCreateForm(ModelForm):
                     'cols': 3
                 }),
         }
+        exclude = ['user_updated', 'user_creation']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,8 +28,8 @@ class CategoryCreateForm(ModelForm):
             fields.field.widget.attrs['autocomplete'] = 'off'
             fields.field.widget.attrs['autofocus'] = True
 
-    def clean(self):
-        clearned = super().clean()
-        if len(clearned['name']) > 50:
-            self.add_error('name', 'Faltan caracteres')
-        return clearned
+    # def clean(self):
+    #     clearned = super().clean()
+    #     if len(clearned['name']) > 50:
+    #         self.add_error('name', 'Faltan caracteres')
+    #     return clearned

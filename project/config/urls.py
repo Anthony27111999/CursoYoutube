@@ -15,6 +15,7 @@ urlpatterns = [
     path('erp/', include('core.product.urls')),
     path('dashboard/', include('core.dashboard.urls')),
     path('test/', include('core.filtros.urls')),
+    path('client/', include('core.client.urls')),
 
 ]
 

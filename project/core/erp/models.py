@@ -1,18 +1,30 @@
+from crum import get_current_user
 from django.db import models
 from datetime import datetime
 
 from django.forms import model_to_dict
 from core.erp.choices import gender_choice
 from config.settings import MEDIA_URL, STATIC_URL
+from core.models import BaseModel
 
 
-class Category(models.Model):
+class Category(BaseModel):
     name = models.CharField(max_length=150, verbose_name='Nombre:', unique=True)
     desc = models.CharField(max_length=500, verbose_name='Descripcion:', null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        user = get_current_user()
+        if user is not None:
+            if not self.pk:
+                self.user_creation = user
+            else:
+                self.user_updated = user
+        super(Category, self).save()
     def toJSON(self):
         #model_to_dict lo transforma a dict
         category = model_to_dict(self)
@@ -47,12 +59,18 @@ class Client(models.Model):
     names = models.CharField(max_length=150, verbose_name='Nombres')
     surnames = models.CharField(max_length=150, verbose_name='Apellidos')
     ci = models.CharField(max_length=8, verbose_name='C.I')
-    birthday = models.DateField(default=datetime.now, verbose_name='Decha de nacimiento')
+    date_birthday = models.DateField(default=datetime.now, verbose_name='Decha de nacimiento')
     address = models.CharField(max_length=150,null=True,verbose_name='Direccion', blank=True)
-    sexo = models.CharField(max_length=10, choices=gender_choice, default='male', verbose_name='Sexo')
+    gender = models.CharField(max_length=10, choices=gender_choice, default='male', verbose_name='Sexo')
 
     def __str__(self):
         return self.names
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['gender'] = self.get_gender_display()
+        item['date_birthday'] = self.date_birthday.strftime('%Y-%m-%d')
+        return item
 
     class Meta:
         verbose_name = 'Cliente'

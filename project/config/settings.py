@@ -29,7 +29,10 @@ INSTALLED_APPS = [
     'core.erp',
     'core.homepage',
     'core.login',
-    'core.product'
+    'core.product',
+    'core.user',
+    'core.client'
+
 ]
 
 MIDDLEWARE = [
@@ -40,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'crum.CurrentRequestUserMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -66,7 +70,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = db.POSTGRESQL
+DATABASES = db.SQLITE
 
 #// dbname - test
 #// user postgres
@@ -123,3 +127,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'user.User'
