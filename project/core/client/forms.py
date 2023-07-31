@@ -23,9 +23,9 @@ class ClientForm(ModelForm):
                     'placeholder': 'Ingrese sus apellidos',
                 }
             ),
-            'dni': TextInput(
+            'ci': TextInput(
                 attrs={
-                    'placeholder': 'Ingrese su dni',
+                    'placeholder': 'Ingrese su ci',
                 }
             ),
             'date_birthday': DateInput(format='%Y-%m-%d',

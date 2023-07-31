@@ -43,9 +43,10 @@
 
 
                     {% for visible_field in form.visible_fields %}
-
-                        <label for="{{ visible_field.label }}" class="form-label">{{ visible_field.label }}</label>
-                        {{ visible_field }}
+                        <div class="form-group">
+                            <label for="{{ visible_field.label }}" class="form-label">{{ visible_field.label }}</label>
+                            {{ visible_field }}
+                        </div>
                     {% endfor %}
 
                 </div>
@@ -89,7 +90,7 @@
                 console.log(key + ' : ' + value)
             });
             alert_jqueryConfirm(window.location.pathname, parameters, function () {
-                location.href = ('{{ list_url }}');
+                location.reload();
             });
         })
         ;

@@ -2,7 +2,7 @@ var tblClient;
  var modal_title;
 
 function getData() {
-    tblClient = $('#data').DataTable({
+    tblClient = $('#table').DataTable({
         responsive: true,
         autoWidth: false,
         destroy: true,
@@ -19,7 +19,7 @@ function getData() {
             {"data": "id"},
             {"data": "names"},
             {"data": "surnames"},
-            {"data": "dni"},
+            {"data": "ci"},
             {"data": "date_birthday"},
             {"data": "gender"},
             {"data": "id"},
@@ -30,8 +30,8 @@ function getData() {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="#" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="#" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    var buttons = '<a href="#" rel="edit" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="#" rel="delete" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
             },
@@ -57,6 +57,36 @@ $(function () {
         $('#myModalClient').modal('show');
     });
 
+    $('#table tbody')
+        .on('click', 'a[rel="edit"]', function(){
+        $('input[name="action"]').val('edit');
+        modal_title.find('span').html('Edit de un cliente');
+        let tr = tblClient.cell( $(this).closest('td, li')).index();
+        let data = tblClient.row(tr.row).data();
+        $('input[name="id"]').val(data.id)
+        $('input[name="name"]').val(data.names)
+        $('input[name="surname"]').val(data.surnames)
+        $('input[name="ci"]').val(data.ci)
+        $('input[name="date_birthday"]').val(data.date_birthday)
+        $('input[name="address"]').val(data.address)
+        $('input[name="gender"]').val(data.gender)
+        $('#myModalClient').modal('show');
+    })
+        .on('click', 'a[rel="delete"]', function(){
+        $('input[name="action"]').val('edit');
+        modal_title.find('span').html('Edit de un cliente');
+        let tr = tblClient.cell( $(this).closest('td, li')).index();
+        let data = tblClient.row(tr.row).data();
+        $('input[name="id"]').val(data.id)
+        $('input[name="name"]').val(data.names)
+        $('input[name="surname"]').val(data.surnames)
+        $('input[name="ci"]').val(data.ci)
+        $('input[name="date_birthday"]').val(data.date_birthday)
+        $('input[name="address"]').val(data.address)
+        $('input[name="gender"]').val(data.gender)
+        $('#myModalClient').modal('show');
+    });
+
     $('#myModalClient').on('shown.bs.modal', function () {
         $('form')[0].reset();
     });
@@ -65,7 +95,7 @@ $(function () {
         e.preventDefault();
         //var parameters = $(this).serializeArray();
         var parameters = new FormData(this);
-        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
+        alert_jqueryConfirm(window.location.pathname, parameters, '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
             $('#myModalClient').modal('hide');
             tblClient.ajax.reload();
             //getData();
