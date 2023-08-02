@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 from core.homepage.views import IndexView
-from core.login.views import LoginFormView
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,6 +15,7 @@ urlpatterns = [
     path('dashboard/', include('core.dashboard.urls')),
     path('test/', include('core.filtros.urls')),
     path('client/', include('core.client.urls')),
+    path('sale/', include('core.Sale.urls')),
 
 ]
 

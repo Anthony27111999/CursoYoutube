@@ -1,22 +1,22 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
+from .mixins import IsSuperuserMixin, ValidatePermissionRequiredMixin
 
 from .forms import CategoryCreateForm
 from .models import Category
 
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
+    permission_required = ('erp.change_product', 'erp.change_user')
     model = Category
     template_name = 'category/list.html'
-
-    # Este decorator no deja acceder a la persona que no este logueada
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -29,7 +29,7 @@ class CategoryListView(ListView):
                 for i in Category.objects.all():
                     data.append(i.toJSON())
             else:
-                data['error'] = 'A ocurrido un error'
+                data['error'] = 'Ha ocurrido un error'
         except Exception as ex:
             data['error'] = str(ex)
 

@@ -34,7 +34,17 @@
     </div>
     <!-- Block for js -->
     {% block javascript %}
-    
+
     {% endblock %}
+
+    <script>
+        {% if messages %}
+            html =''
+            {% for message in messages %}
+                html += '{{message}}';
+            {% endfor %}
+            alert(html)
+        {% endif %}
+    </script>
     </body>
 {% endblock %}

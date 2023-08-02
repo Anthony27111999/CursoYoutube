@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'core.login',
     'core.product',
     'core.user',
-    'core.client'
+    'core.client',
+    'core.Sale',
 
 ]
 

@@ -27,7 +27,10 @@ class Category(BaseModel):
         super(Category, self).save()
     def toJSON(self):
         #model_to_dict lo transforma a dict
-        category = model_to_dict(self)
+        try:
+            category = model_to_dict(self)
+        except Exception as e:
+            return e
         return category
 
     class Meta:
